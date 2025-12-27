@@ -1,0 +1,493 @@
+/* ===== 1. RESET & CẤU HÌNH CHUNG ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-snap-type: y mandatory;
+}
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #d32f2f; /* Màu đỏ chủ đạo của Tết */
+    overflow-x: hidden;
+}
+
+section {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    scroll-snap-align: start;
+    overflow: hidden;
+}
+
+/* Khung chứa chuẩn tỷ lệ 3:2 */
+.inner-container {
+    aspect-ratio: 3 / 2;
+    height: 100vh;
+    max-width: 100vw;
+    position: relative;
+    background-color: #000; /* Nền đen để bù vào khoảng trống nếu ảnh không khít màn hình */
+    margin: 0 auto;
+}
+
+/* ===== 2. XỬ LÝ ẢNH NỀN (NẰM GỌN TRONG KHUNG) ===== */
+.openingPageBackground, 
+.spinningWheelPageBackground, 
+.winnerPageBackground, 
+.playerPageBackground {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.openingPageBackground img, 
+.spinningWheelPageBackground img, 
+.winnerPageBackground img, 
+.playerPageBackground img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Đảm bảo ảnh nằm vừa vặn, không bị phóng to/mất hình */
+}
+
+/* ===== 3. NỘI DUNG TRANG MỞ ĐẦU (OPENING PAGE) ===== */
+.openingPageContent {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    pointer-events: none; /* Tránh cản trở thao tác cuộn chuột */
+}
+
+.openingPageContentLeft {
+    flex: 0.3; /* Thu hẹp thêm diện tích bên trái */
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 4%;
+}
+
+.openingPageContentLeft span {
+    writing-mode: vertical-rl; 
+    text-orientation: upright;
+    font-family: 'Montserrat', sans-serif;
+    
+    /* Giảm font-size xuống một chút */
+    font-size: 1.2vw; 
+    
+    color: #ffd54f;
+    padding: 20px 8px; /* Thu nhỏ padding cho cân đối với chữ nhỏ */
+    border: 1.5px solid #ffd54f; /* Làm mỏng viền một chút */
+    border-radius: 30px;
+    background: rgba(0, 0, 0, 0.6);
+    
+    /* Giảm khoảng cách ký tự một chút để dòng không quá dài */
+    letter-spacing: 0.3vw; 
+    font-weight: 700;
+    text-align: center;
+    pointer-events: auto;
+}
+
+.openingPageContentRight {
+    flex: 1.5;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 3% 5%;
+    text-align: center;
+    pointer-events: auto;
+}
+
+.logoArea {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 60px; /* Tăng khoảng cách giữa 2 logo */
+    margin-top: 80px; /* Đẩy cụm logo xuống thấp hơn nữa theo ý bạn */
+    margin-bottom: 20px;
+}
+
+/* Logo Stec - Tăng quy mô để cân bằng */
+.logoStec .imgLogo {
+    height: 7.5vw; 
+    max-height: 120px;
+    width: auto;
+}
+
+/* Logo Rayprus - Giữ tỷ lệ thanh mảnh */
+.logoRayprus .imgLogo {
+    height: 5.5vw;
+    max-height: 90px;
+    width: auto;
+}
+
+.imgLogo {
+    height: 5vw; /* Co giãn logo theo màn hình */
+    max-height: 80px;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+}
+
+.openingPageMainContent {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+    /* Nhích cả khối nội dung xuống một chút (ví dụ từ -8% về -5%) */
+    margin-top: -5%; 
+}
+
+.openingPageMainContent h3:first-child {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2.5vw;
+    color: #ffd54f;
+    letter-spacing: 0.5vw;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.openingPageMainContent h1 {
+    font-family: 'Dancing Script', cursive;
+    font-size: 8vw;
+    color: #ffffff;
+    margin: 0;
+    line-height: 1.1; /* Tăng nhẹ từ 1 lên 1.1 để tạo khoảng cách với dòng trên/dưới */
+    text-shadow: 0 0 10px #fff, 0 0 25px #ffd54f, 4px 4px 12px rgba(0,0,0,0.6);
+    transform: rotate(-2deg);
+}
+
+.openingPageMainContent h3:last-child {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.3vw;
+    color: #ffffff;
+    letter-spacing: 1px;
+    
+    /* Điều chỉnh lại khoảng cách: 
+       0px là vị trí mặc định, bạn có thể tăng lên 5px hoặc 10px nếu muốn xuống thêm nữa */
+    margin-top: 5px; 
+    
+    text-transform: uppercase;
+    opacity: 0.9;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+
+/* ===== 4. TRANG VÒNG QUAY (SPINNING WHEEL) ===== */
+.spinningWheelPageContent {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2% 0;
+}
+
+/* Container chứa 2 logo ở trang Quay số */
+.companyLogoArea {
+    display: flex;
+    justify-content: space-between; /* Đẩy về 2 lề */
+    align-items: center;
+    width: 100%;
+    padding: 1% 1%; /* Căn lề giống hoặc tương đối với Opening Page */
+    position: absolute;
+    top: 0;
+    z-index: 5;
+    pointer-events: none; /* Tránh cản trở nếu có hiệu ứng đè lên */
+}
+
+/* Logo Stec ở trang quay (To bằng Opening) */
+.companyLogoArea .logoStec .imgLogo {
+    height: 7.5vw; 
+    max-height: 120px;
+    width: auto;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+    pointer-events: auto;
+}
+
+/* Logo Rayprus ở trang quay (To bằng Opening) */
+.companyLogoArea .logoRayprus .imgLogo {
+    height: 5.5vw;
+    max-height: 90px;
+    width: auto;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+    pointer-events: auto;
+}
+
+.wheelArea {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.wheel-container {
+    position: relative;
+    width: 450px;
+    height: 450px;
+}
+
+.center-name {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffd54f;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.8);
+    z-index: 10;
+}
+
+.dot {
+    position: absolute;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #ffd54f;
+    opacity: 0.2;
+    transition: all 0.2s;
+}
+
+.dot.active { opacity: 1; box-shadow: 0 0 15px #ffd54f, 0 0 25px #ffd54f; }
+
+/* ===== 5. ĐIỀU KHIỂN & THANH CÔNG CỤ ===== */
+/* MoreToolbar nằm bên phải */
+.moreToolbar {
+    position: relative; /* Đổi từ absolute sang relative */
+    bottom: 0;
+    right: 0;
+    display: flex;
+    gap: 10px;
+    margin-top: 0; /* Bỏ margin top cũ */
+    pointer-events: auto;
+}
+
+.playersListBtn, .winnersListBtn {
+    font-size: 11px;
+    padding: 6px 15px;
+    background: rgba(211, 47, 47, 0.8);
+    border: 1.5px solid #ffd54f;
+    border-radius: 20px;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.playersListBtn:hover, .winnersListBtn:hover {
+    transform: scale(1.05);
+    background: #b71c1c;
+}
+
+.toolbar {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.export-btn-popup {
+    margin-top: 15px;
+    background: #2e7d32; /* Màu xanh lá cho khác biệt */
+    border-color: #ffd54f;
+}
+
+.toolbar, .moreToolbar {
+    display: flex;
+    gap: 12px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+button, .custom-file-upload, select {
+    padding: 8px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 20px;
+    border: 2px solid #ffd54f;
+    background: #d32f2f;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover:not(:disabled), .custom-file-upload:hover {
+    transform: scale(1.05);
+    background: #b71c1c;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: #999;
+}
+
+.status-message {
+    color: #ffd54f;
+    margin-top: 10px;
+    height: 20px;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px #000;
+}
+
+.spinningWheelPageFooter {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between; /* Đẩy 2 phần về 2 phía */
+    align-items: flex-end; /* Căn sát đáy */
+    padding: 0 3% 2% 3%; /* Padding: Trên - Phải - Dưới - Trái */
+    z-index: 10;
+    pointer-events: none; /* Tránh cản trở vòng quay */
+}
+
+/* InfoArea nằm bên trái */
+.infoArea {
+    position: relative; /* Đổi từ absolute sang relative để đi theo flexbox */
+    bottom: 0;
+    left: 0;
+    color: #ffffff;
+    font-size: 0.8vw;
+    text-align: left;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+    pointer-events: auto;
+}
+
+.infoArea p {
+    margin: 0;
+    opacity: 0.8; /* Làm mờ nhẹ phần text để tinh tế hơn */
+}
+
+.infoArea span {
+    color: #ffd54f;
+    font-weight: bold;
+    opacity: 1;
+}
+
+/* ===== 6. POPUPS (FIX HIỂN THỊ TRÊN NỀN ẢNH) ===== */
+.winnerPopupPage, .playerPopupPage {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85); /* Làm tối phía sau để nổi bật popup */
+    z-index: 1000;
+    display: none; /* Sẽ đổi thành flex bằng JS */
+    justify-content: center;
+    align-items: center;
+}
+
+.winnerPopup, .playerPopup {
+    position: relative;
+    width: 85vw;
+    max-width: 900px;
+    aspect-ratio: 3 / 2;
+    /* Không đặt background-color ở đây để hiện ảnh bg-popup.jpg của bạn */
+}
+
+/* Khung nội dung lọt lòng phần giữa của ảnh nền */
+.winnerPopupContent, .playerPopupContent {
+    position: absolute;
+    z-index: 10;
+    top: 18%;    /* Nhích lên một chút nữa */
+    left: 10%;
+    right: 10%;
+    bottom: 15%;
+    display: flex;
+    flex-direction: column;
+    padding: 0 15px; /* Giảm padding trên dưới */
+}
+
+.winnerPopupContent h3, .playerPopupContent h3 {
+    color: #ffeb3b; /* Giữ màu vàng gold để nổi bật */
+    font-size: 22px; /* Ép cứng về 22px, không cho nhảy theo màn hình */
+    margin-bottom: 8px; 
+    text-align: center;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(255, 235, 59, 0.3); /* Thêm đường gạch chân mỏng */
+    padding-bottom: 5px;
+    width: 100%;
+}
+
+/* Vùng danh sách: BẮT BUỘC phải có flex-grow để nó hiện ra */
+#winnerList, #playerList {
+    flex: 1;
+    overflow-y: auto;
+    margin-top: 5px; /* Giảm khoảng cách với tiêu đề h3 */
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.88);
+    border-radius: 8px;
+}
+
+/* Item danh sách to và rõ */
+.winner-item {
+    font-size: 1.2vw;
+    color: #222; /* Màu đen xám đậm */
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(211, 47, 47, 0.2);
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+}
+
+.stt {
+    font-weight: 800;
+    color: #d32f2f;
+    margin-right: 12px;
+    min-width: 40px;
+    font-size: 1.3vw;
+}
+
+.prize-group-title {
+    font-weight: 800;
+    color: #fff;
+    font-size: 1.5vw;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    background: linear-gradient(90deg, #d32f2f, #f44336); /* Gradient đỏ */
+    padding: 8px 15px;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Cụm nút bấm ở dưới cùng Popup */
+.popup-footer {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding-top: 10px;
+    margin-top: auto; /* Luôn nằm sát đáy popup nội dung */
+}
+
+.popup-footer button {
+    padding: 10px 25px;
+    font-weight: bold;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: 0.3s;
+    border: 2px solid #ffeb3b;
+}
+
+#closeWinnerPopupBtn, #closePlayerPopupBtn {
+    background: #666;
+    color: white;
+}
+
+.export-btn-popup {
+    background: #2e7d32; /* Màu xanh lá cho nút Excel */
+    color: white;
+}

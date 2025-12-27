@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lucky Draw - Year End Party</title>
+
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@800&display=swap"
+        rel="stylesheet" />
+</head>
+
+<body>
+    <section class="openingPage">
+        <div class="inner-container">
+            <div class="openingPageBackground">
+                <img src="./img/bg-start.jpg" alt="bg-start" />
+            </div>
+
+            <div class="openingPageContent">
+                <div class="openingPageContentLeft">
+                    <span>29-01-2026</span>
+                </div>
+                <div class="openingPageContentRight">
+                    <div class="logoArea">
+                        <div class="logoStec">
+                            <img class="imgLogo" src="./img/logo-saigonStec.png" alt="SaiGon Stec" />
+                        </div>
+                        <div class="logoRayprus">
+                            <img class="imgLogo" src="./img/logo-rayprus.png" alt="Rayprus" />
+                        </div>
+                    </div>
+                    <div class="openingPageMainContent">
+                        <h3>VN-NPI</h3>
+                        <h1>Year-end Party</h1>
+                        <h3>(VN RD Center & OPS Center)</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="spinningWheelPage">
+        <div class="inner-container">
+            <div class="spinningWheelPageBackground">
+                <img src="./img/bg-tet.jpg" alt="bg-tet" />
+            </div>
+            <div class="spinningWheelPageContent">
+                <div class="companyLogoArea">
+                    <div class="logoStec">
+                        <img class="imgLogo" src="./img/logo-saigonStec.png" alt="SaiGon Stec" />
+                    </div>
+                    <div class="logoRayprus">
+                        <img class="imgLogo" src="./img/logo-rayprus.png" alt="Rayprus" />
+                    </div>
+                </div>
+                <div class="wheelArea">
+                    <div class="stage">
+                        <div class="wheel-container" id="wheel">
+                            <div class="center-name" id="display">Chào mừng bạn! 🧧</div>
+                        </div>
+
+                        <div class="control">
+                            <div class="toolbar">
+                                <div id="uploadContainer">
+                                    <label for="excelInput" class="custom-file-upload">Chọn file 📂</label>
+                                    <input type="file" id="excelInput" accept=".xlsx,.xls" style="display: none" />
+                                </div>
+
+                                <select id="prizeSelect">
+                                    <option value="Khuyến khích">Giải Khuyến khích</option>
+                                    <option value="Giải Ba">Giải Ba</option>
+                                    <option value="Giải Nhì">Giải Nhì</option>
+                                    <option value="Giải Nhất">Giải Nhất</option>
+                                    <option value="Giải Phụ">Giải Phụ</option>
+                                </select>
+
+                                <button id="startSpinBtn" disabled>QUAY</button>
+                                <button id="stopSpinBtn" class="hidden">DỪNG</button>
+                            </div>
+                            <div id="statusMsg" class="status-message"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="spinningWheelPageFooter">
+                    <div class="infoArea">
+                        <p>Chịu trách nhiệm nội dung: <span>Nguyễn Thị Ngọc Duyên</span></p>
+                        <p>Phát triển bởi: <span>Trương Minh Trí</span></p>
+                    </div>
+                    <div class="moreToolbar">
+                        <button id="openPlayersList" class="playersListBtn">
+                            Danh sách người chơi
+                        </button>
+                        <button id="openWinners" class="winnersListBtn">
+                            🏆 Danh sách trúng thưởng
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="winnerPopupPage">
+        <div class="winnerPageBackground">
+            <img src="./img/bg-popup.jpg" alt="bg-popup">
+        </div>
+        <div class="winnerPopup" id="winnerPopup">
+            <div class="winnerPopupContent">
+                <h3>🏆 DANH SÁCH TRÚNG THƯỞNG</h3>
+                <div id="winnerList"></div>
+                <div class="popup-footer"> <button id="exportBtn" class="export-btn-popup">Xuất file Excel 📥</button>
+                    <button id="closeWinnerPopupBtn">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="playerPopupPage">
+        <div class="playerPageBackground">
+            <img src="./img/bg-popup.jpg" alt="bg-popup">
+        </div>
+        <div class="playerPopup" id="playerPopup">
+            <div class="playerPopupContent">
+                <h3>DANH SÁCH NGƯỜI CHƠI</h3>
+                <div id="playerList"></div>
+                <button id="closePlayerPopupBtn">Đóng</button>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
