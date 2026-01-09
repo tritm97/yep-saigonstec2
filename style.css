@@ -98,7 +98,8 @@ section {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 3% 5%;
+    /* padding: 3% 5%; */
+    padding: 3% 0 3% 5%;
     text-align: center;
     pointer-events: auto;
 }
@@ -112,12 +113,16 @@ section {
     margin-bottom: 20px;
 }
 
-/* Logo Stec - Tăng quy mô để cân bằng */
-/* .logoStec .imgLogo {
-    height: 7.5vw; 
-    max-height: 120px;
-    width: auto;
-} */
+.logoArea .nameRayprus h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1vw;
+    color: #fff;
+    letter-spacing: 1px;
+    
+    text-transform: uppercase;
+    opacity: 0.9;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
 
 /* Logo Rayprus - Giữ tỷ lệ thanh mảnh */
 .logoRayprus .imgLogo {
@@ -152,7 +157,7 @@ section {
 
 .openingPageMainContent h1 {
     font-family: 'Dancing Script', cursive;
-    font-size: 8vw;
+    font-size: 5vw;
     color: #ffffff;
     margin: 0;
     line-height: 1.1; /* Tăng nhẹ từ 1 lên 1.1 để tạo khoảng cách với dòng trên/dưới */

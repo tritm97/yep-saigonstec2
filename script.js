@@ -82,50 +82,62 @@ function createDots() {
 createDots();
 
 /* ===== 5. VALIDATE GIẢI THƯỞNG ===== */
+/* ===== ĐỊNH NGHĨA THỨ TỰ QUAY BẮT BUỘC ===== */
+const PRIZE_ORDER = [
+    "Sixth Prize", "Fifth Prize", "Fourth Prize", "Third Prize", 
+    "Second Prize", "First Prize", "Ninth Prize", "Eighth Prize", 
+    "Seventh Prize", "Tenth Prize", "Bonus Prize"
+];
+
 function validatePrizeQuota() {
     const currentPrize = prizeSelect.value;
     statusMsg.textContent = "";
 
-    // 1. KIỂM TRA ĐIỀU KIỆN CHO GIẢI PHỤ
-    if (currentPrize === "Bonus Prize") {
-        // Kiểm tra xem tất cả các giải trong PRIZE_QUOTA đã đủ số lượng chưa
-        let isAllMainPrizesDone = true;
-        let missingPrizes = [];
+    // 1. Tìm vị trí của giải hiện tại trong chuỗi ưu tiên
+    const currentIndex = PRIZE_ORDER.indexOf(currentPrize);
 
-        for (const [prizeName, quota] of Object.entries(PRIZE_QUOTA)) {
-            const currentCount = (winnersGrouped[prizeName] || []).length;
-            if (currentCount < quota) {
-                isAllMainPrizesDone = false;
-                missingPrizes.push(prizeName);
-            }
+    // 2. Kiểm tra xem các giải đứng trước đã hoàn thành chưa
+    let missingPrizes = [];
+    for (let i = 0; i < currentIndex; i++) {
+        const prevPrizeName = PRIZE_ORDER[i];
+        
+        // Bonus Prize không có quota nên ta mặc định nó không chặn giải sau, 
+        // nhưng ở đây Bonus nằm cuối nên ta chỉ check các giải có quota trong PRIZE_QUOTA
+        const quota = PRIZE_QUOTA[prevPrizeName];
+        const currentCount = (winnersGrouped[prevPrizeName] || []).length;
+
+        if (quota && currentCount < quota) {
+            missingPrizes.push(prevPrizeName);
         }
-
-        if (!isAllMainPrizesDone) {
-            startSpinBtn.disabled = true;
-            statusMsg.style.color = "#ffd54f";
-            statusMsg.textContent = `🚫 Bonus Prize not available yet. Required: ${missingPrizes.join(", ")}`;
-            return false;
-        }
-
-        // Nếu đã xong hết giải chính
-        statusMsg.style.color = "#2e7d32";
-        statusMsg.textContent = "🎁 Bonus Prize Mode: Ready!";
-        startSpinBtn.disabled = pool.length === 0;
-        return true;
     }
 
-    // 2. KIỂM TRA ĐIỀU KIỆN CHO CÁC GIẢI CHÍNH (Giữ nguyên logic cũ của bạn)
-    const currentCount = (winnersGrouped[currentPrize] || []).length;
-    const maxCount = PRIZE_QUOTA[currentPrize];
-
-    if (currentCount >= maxCount) {
+    // 3. Nếu có giải trước chưa xong -> Khóa giải hiện tại
+    if (missingPrizes.length > 0) {
         startSpinBtn.disabled = true;
         statusMsg.style.color = "#ffd54f";
-        statusMsg.textContent = `⚠️ ${currentPrize} quota reached. Please change the prize!`;
+        statusMsg.textContent = `🚫 Not available. Must finish: ${missingPrizes[0]} first!`;
         return false;
     }
 
+    // 4. Nếu đã xong các giải trước, kiểm tra định mức của chính giải hiện tại
+    if (currentPrize !== "Bonus Prize") {
+        const currentCount = (winnersGrouped[currentPrize] || []).length;
+        const maxCount = PRIZE_QUOTA[currentPrize];
+
+        if (currentCount >= maxCount) {
+            startSpinBtn.disabled = true;
+            statusMsg.style.color = "#ffd54f";
+            statusMsg.textContent = `⚠️ ${currentPrize} reached. Change to next prize!`;
+            return false;
+        }
+    }
+
+    // 5. Nếu còn người trong pool thì cho phép quay
     startSpinBtn.disabled = pool.length === 0;
+    if (currentPrize === "Bonus Prize") {
+        statusMsg.style.color = "#2e7d32";
+        statusMsg.textContent = "🎁 Bonus Prize Mode: Ready!";
+    }
     return true;
 }
 prizeSelect.onchange = validatePrizeQuota;
