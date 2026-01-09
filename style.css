@@ -113,11 +113,11 @@ section {
 }
 
 /* Logo Stec - Tăng quy mô để cân bằng */
-.logoStec .imgLogo {
+/* .logoStec .imgLogo {
     height: 7.5vw; 
     max-height: 120px;
     width: auto;
-}
+} */
 
 /* Logo Rayprus - Giữ tỷ lệ thanh mảnh */
 .logoRayprus .imgLogo {
@@ -163,7 +163,7 @@ section {
 .openingPageMainContent h3:last-child {
     font-family: 'Montserrat', sans-serif;
     font-size: 1.3vw;
-    color: #ffffff;
+    color: #ffd54f;
     letter-spacing: 1px;
     
     /* Điều chỉnh lại khoảng cách: 
@@ -171,7 +171,7 @@ section {
     margin-top: 5px; 
     
     text-transform: uppercase;
-    opacity: 0.9;
+    /* opacity: 0.9; */
     text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
 }
 
@@ -201,12 +201,34 @@ section {
 }
 
 /* Logo Stec ở trang quay (To bằng Opening) */
-.companyLogoArea .logoStec .imgLogo {
+/* .companyLogoArea .logoStec .imgLogo {
     height: 7.5vw; 
     max-height: 120px;
     width: auto;
     filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
     pointer-events: auto;
+} */
+
+.companyLogoArea .logoStec h4 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.5vw;
+    color: #ffd54f;
+    letter-spacing: 1px;
+    
+    text-transform: uppercase;
+    opacity: 0.9;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+
+.companyLogoArea .logoStec h6 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.1vw;
+    color: #ffd54f;
+    letter-spacing: 1px;
+    
+    text-transform: uppercase;
+    opacity: 0.9;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
 }
 
 /* Logo Rayprus ở trang quay (To bằng Opening) */
@@ -241,7 +263,7 @@ section {
     text-align: center;
     font-size: 24px;
     font-weight: bold;
-    color: #ffd54f;
+    color: #fff;
     text-shadow: 2px 2px 5px rgba(0,0,0,0.8);
     z-index: 10;
 }
@@ -294,12 +316,6 @@ section {
 
 .hidden {
     display: none !important;
-}
-
-.export-btn-popup {
-    margin-top: 15px;
-    background: #2e7d32; /* Màu xanh lá cho khác biệt */
-    border-color: #ffd54f;
 }
 
 .toolbar, .moreToolbar {
@@ -400,13 +416,13 @@ button:disabled {
 .winnerPopupContent, .playerPopupContent {
     position: absolute;
     z-index: 10;
-    top: 18%;    /* Nhích lên một chút nữa */
+    top: 18%;
     left: 10%;
     right: 10%;
     bottom: 15%;
     display: flex;
     flex-direction: column;
-    padding: 0 15px; /* Giảm padding trên dưới */
+    padding: 0 15px;
 }
 
 .winnerPopupContent h3, .playerPopupContent h3 {
@@ -423,6 +439,11 @@ button:disabled {
     width: 100%;
 }
 
+.winnerPopupContent, .playerPopupContent button {
+    margin: 10px 0 0 0;
+    padding: 10px 25px; /* Giảm padding trên dưới */
+}
+
 /* Vùng danh sách: BẮT BUỘC phải có flex-grow để nó hiện ra */
 #winnerList, #playerList {
     flex: 1;
@@ -435,7 +456,7 @@ button:disabled {
 
 /* Item danh sách to và rõ */
 .winner-item {
-    font-size: 1.2vw;
+    font-size: 15px;
     color: #222; /* Màu đen xám đậm */
     padding: 10px 0;
     border-bottom: 1px solid rgba(211, 47, 47, 0.2);
@@ -449,13 +470,13 @@ button:disabled {
     color: #d32f2f;
     margin-right: 12px;
     min-width: 40px;
-    font-size: 1.3vw;
+    font-size: 15px;
 }
 
 .prize-group-title {
     font-weight: 800;
     color: #fff;
-    font-size: 1.5vw;
+    font-size: 15px;
     margin-top: 15px;
     margin-bottom: 5px;
     background: linear-gradient(90deg, #d32f2f, #f44336); /* Gradient đỏ */
@@ -490,4 +511,6 @@ button:disabled {
 .export-btn-popup {
     background: #2e7d32; /* Màu xanh lá cho nút Excel */
     color: white;
+    border-color: #ffd54f;
 }
+

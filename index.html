@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lucky Draw - Year End Party</title>
-
+    <title>Lucky Spin - Year End Party</title>
+    <link rel="icon" href="./img/logoRayprusSquare.jpg">
     <link rel="stylesheet" href="style.css" />
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -29,7 +29,7 @@
                 <div class="openingPageContentRight">
                     <div class="logoArea">
                         <div class="logoStec">
-                            <img class="imgLogo" src="./img/logo-saigonStec.png" alt="SaiGon Stec" />
+                            <!-- <img class="imgLogo" src="./img/logo-saigonStec.png" alt="SaiGon Stec" /> -->
                         </div>
                         <div class="logoRayprus">
                             <img class="imgLogo" src="./img/logo-rayprus.png" alt="Rayprus" />
@@ -53,7 +53,9 @@
             <div class="spinningWheelPageContent">
                 <div class="companyLogoArea">
                     <div class="logoStec">
-                        <img class="imgLogo" src="./img/logo-saigonStec.png" alt="SaiGon Stec" />
+                        <!-- <img class="imgLogo" src="./img/logo-saigonStec.png" alt="SaiGon Stec" /> -->
+                         <h4>VN-NPI</h4>
+                         <h6>VN RD Center & OPS Center</h6>
                     </div>
                     <div class="logoRayprus">
                         <img class="imgLogo" src="./img/logo-rayprus.png" alt="Rayprus" />
@@ -62,26 +64,32 @@
                 <div class="wheelArea">
                     <div class="stage">
                         <div class="wheel-container" id="wheel">
-                            <div class="center-name" id="display">Chào mừng bạn! 🧧</div>
+                            <div class="center-name" id="display">Lucky Spin 🧧</div>
                         </div>
 
                         <div class="control">
                             <div class="toolbar">
                                 <div id="uploadContainer">
-                                    <label for="excelInput" class="custom-file-upload">Chọn file 📂</label>
+                                    <label for="excelInput" class="custom-file-upload">Choose file 📂</label>
                                     <input type="file" id="excelInput" accept=".xlsx,.xls" style="display: none" />
                                 </div>
 
                                 <select id="prizeSelect">
-                                    <option value="Khuyến khích">Giải Khuyến khích</option>
-                                    <option value="Giải Ba">Giải Ba</option>
-                                    <option value="Giải Nhì">Giải Nhì</option>
-                                    <option value="Giải Nhất">Giải Nhất</option>
-                                    <option value="Giải Phụ">Giải Phụ</option>
+                                    <option value="Sixth Prize">Sixth Prize</option>
+                                    <option value="Fifth Prize">Fifth Prize</option>
+                                    <option value="Fourth Prize">Fourth Prize</option>
+                                    <option value="Third Prize">Third Prize</option>
+                                    <option value="Second Prize">Second Prize</option>
+                                    <option value="First Prize">First Prize</option>
+                                    <option value="Ninth Prize">Ninth Prize</option>
+                                    <option value="Eighth Prize">Eighth Prize</option>
+                                    <option value="Seventh Prize">Seventh Prize</option>
+                                    <option value="Tenth Prize">Tenth Prize</option>
+                                    <option value="Bonus Prize">Bonus Prize</option>
                                 </select>
 
-                                <button id="startSpinBtn" disabled>QUAY</button>
-                                <button id="stopSpinBtn" class="hidden">DỪNG</button>
+                                <button id="startSpinBtn" disabled>SPIN</button>
+                                <button id="stopSpinBtn" class="hidden">STOP</button>
                             </div>
                             <div id="statusMsg" class="status-message"></div>
                         </div>
@@ -89,15 +97,15 @@
                 </div>
                 <div class="spinningWheelPageFooter">
                     <div class="infoArea">
-                        <p>Chịu trách nhiệm nội dung: <span>Nguyễn Thị Ngọc Duyên</span></p>
-                        <p>Phát triển bởi: <span>Trương Minh Trí</span></p>
+                        <p>Content Owner: <span>Mr. Nagashige</span></p>
+                        <p>Developed by: <span>Truong Minh Tri</span></p>
                     </div>
                     <div class="moreToolbar">
                         <button id="openPlayersList" class="playersListBtn">
-                            Danh sách người chơi
+                            Player List
                         </button>
                         <button id="openWinners" class="winnersListBtn">
-                            🏆 Danh sách trúng thưởng
+                            🏆 Winners List
                         </button>
                     </div>
                 </div>
@@ -111,10 +119,11 @@
         </div>
         <div class="winnerPopup" id="winnerPopup">
             <div class="winnerPopupContent">
-                <h3>🏆 DANH SÁCH TRÚNG THƯỞNG</h3>
+                <h3>🏆 WINNERS LIST</h3>
                 <div id="winnerList"></div>
-                <div class="popup-footer"> <button id="exportBtn" class="export-btn-popup">Xuất file Excel 📥</button>
-                    <button id="closeWinnerPopupBtn">Đóng</button>
+                <div class="popup-footer">
+                    <button id="exportBtn" class="export-btn-popup">Export to Excel 📥</button>
+                    <button id="closeWinnerPopupBtn">Close</button>
                 </div>
             </div>
         </div>
@@ -126,9 +135,9 @@
         </div>
         <div class="playerPopup" id="playerPopup">
             <div class="playerPopupContent">
-                <h3>DANH SÁCH NGƯỜI CHƠI</h3>
+                <h3>PLAYER LIST</h3>
                 <div id="playerList"></div>
-                <button id="closePlayerPopupBtn">Đóng</button>
+                <button id="closePlayerPopupBtn">Close</button>
             </div>
         </div>
     </section>
