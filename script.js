@@ -67,7 +67,6 @@ function diamondPosition(t) {
 }
 
 function createDots() {
-    // Không dùng innerHTML để tránh ghi đè thẻ #display
     dots = [];
     for (let i = 0; i < DOT_COUNT; i++) {
         const d = document.createElement("div");
@@ -82,7 +81,6 @@ function createDots() {
 createDots();
 
 /* ===== 5. VALIDATE GIẢI THƯỞNG ===== */
-/* ===== ĐỊNH NGHĨA THỨ TỰ QUAY BẮT BUỘC ===== */
 const PRIZE_ORDER = [
     "Sixth Prize", "Fifth Prize", "Fourth Prize", "Third Prize", 
     "Second Prize", "First Prize", "Ninth Prize", "Eighth Prize", 
@@ -101,8 +99,8 @@ function validatePrizeQuota() {
     for (let i = 0; i < currentIndex; i++) {
         const prevPrizeName = PRIZE_ORDER[i];
         
-        // Bonus Prize không có quota nên ta mặc định nó không chặn giải sau, 
-        // nhưng ở đây Bonus nằm cuối nên ta chỉ check các giải có quota trong PRIZE_QUOTA
+        // Bonus Prize không có quota nên mặc định nó không chặn giải sau, 
+        // nhưng ở đây Bonus nằm cuối nên chỉ check các giải có quota trong PRIZE_QUOTA
         const quota = PRIZE_QUOTA[prevPrizeName];
         const currentCount = (winnersGrouped[prevPrizeName] || []).length;
 
@@ -168,7 +166,7 @@ function toggleSpinButtons(isSpinning) {
     if (isSpinning) {
         startSpinBtn.classList.add("hidden");
         stopSpinBtn.classList.remove("hidden");
-        stopSpinBtn.disabled = false; // Đảm bảo nút dừng được kích hoạt
+        stopSpinBtn.disabled = false;
     } else {
         startSpinBtn.classList.remove("hidden");
         stopSpinBtn.classList.add("hidden");
@@ -178,8 +176,6 @@ function toggleSpinButtons(isSpinning) {
 toggleSpinButtons(false);
 
 startSpinBtn.onclick = () => {
-    // Hàm này sẽ gọi validatePrizeQuota đã sửa ở trên, 
-    // nên nếu là Giải Phụ nó sẽ tự động cho qua
     if (!validatePrizeQuota()) return; 
 
     toggleSpinButtons(true);
@@ -188,7 +184,6 @@ startSpinBtn.onclick = () => {
 
     spinTimer = setInterval(runDotAnimation, 50);
 
-    // Hiệu ứng nhảy mã NV liên tục của bạn (Giữ nguyên 100%)
     nameTimer = setInterval(() => {
         const randomIndex = Math.floor(Math.random() * pool.length);
         display.textContent = pool[randomIndex].id;
@@ -196,11 +191,9 @@ startSpinBtn.onclick = () => {
 };
 
 stopSpinBtn.onclick = () => {
-    // 1. Dừng ngay lập tức các bộ đếm thời gian
-    clearInterval(nameTimer);  // Dừng nhảy tên
-    clearInterval(spinTimer);  // Dừng hiệu ứng đèn LED
+    clearInterval(nameTimer);
+    clearInterval(spinTimer);
 
-    // 2. Chốt ngay người đang hiển thị tại thời điểm bấm nút
     const displayedId = display.textContent;
     currentPerson = pool.find(p => p.id === displayedId);
 
@@ -208,42 +201,32 @@ stopSpinBtn.onclick = () => {
         currentPerson = pool[Math.floor(Math.random() * pool.length)];
     }
     
-    // 3. Hiển thị kết quả và bắn pháo hoa ngay
     finalizeWinner();
 
-    // 4. Trả lại trạng thái các nút bấm
     toggleSpinButtons(false);
-    // stopSpinBtn.disabled = false;
 };
 
 function finalizeWinner() {
-    const p = currentPerson; // Người may mắn hiện tại
-    const selectedPrize = prizeSelect.value; // Giải thưởng đang chọn
+    const p = currentPerson;
+    const selectedPrize = prizeSelect.value;
     
-    // 1. Dừng mọi hiệu ứng quay số (Phòng hờ nếu chưa dừng)
     clearInterval(nameTimer);
     clearInterval(spinTimer);
 
-    // 2. Kiểm tra và khởi tạo nhóm giải thưởng trong winnersGrouped (Đặc biệt cho Giải Phụ)
     if (!winnersGrouped[selectedPrize]) {
         winnersGrouped[selectedPrize] = [];
     }
 
-    // 3. Lưu thông tin trúng thưởng
-    p.prize = selectedPrize; // Gán tên giải vào đối tượng người trúng
-    winners.push(p); // Lưu vào danh sách tổng
-    winnersGrouped[selectedPrize].push(p); // Lưu vào nhóm giải riêng biệt
+    p.prize = selectedPrize;
+    winners.push(p);
+    winnersGrouped[selectedPrize].push(p);
 
-    // 4. Xóa người trúng khỏi danh sách quay tiếp theo (Pool)
     pool = pool.filter((x) => x.id !== p.id);
 
-    // 5. Hiệu ứng ăn mừng
-    fireConfetti(); // Bắn pháo hoa
+    fireConfetti();
 
-    // 6. Hiển thị thông tin người thắng lên màn hình chính (Display)
     const honor = p.gender.toLowerCase().includes("nữ") ? "Ms." : "Mr.";
-    
-    // Giao diện người thắng (Cỡ chữ to, màu sắc nổi bật)
+
     display.innerHTML = `
         <span style="font-size: 0.6em; color: #ffd54f; text-transform: uppercase;">${selectedPrize}</span><br/>
         <span style="color: #fff; font-size: 1.2em;">🎉 ${p.id}</span><br/>
@@ -252,7 +235,6 @@ function finalizeWinner() {
     `;
     display.classList.add("winner");
 
-    // 7. Cập nhật lại trạng thái các nút và thông báo định mức
     validatePrizeQuota();
 }
 
@@ -260,8 +242,7 @@ function finalizeWinner() {
 function renderWinnerList() {
     const listDiv = document.getElementById('winnerList');
     listDiv.innerHTML = ''; 
-    
-    // Thêm "Giải Phụ" vào danh sách các giải cần hiển thị
+
     const order = ["First Prize", "Second Prize", "Third Prize", "Fourth Prize", "Fifth Prize", "Sixth Prize", "Seventh Prize", "Eighth Prize", "Ninth Prize", "Tenth Prize", "Bonus Prize"];
     
     let hasAnyWinner = false;
@@ -271,13 +252,11 @@ function renderWinnerList() {
         if (group && group.length > 0) {
             hasAnyWinner = true;
             
-            // Tạo tiêu đề nhóm giải (Ví dụ: Giải Phụ)
             const title = document.createElement('div');
             title.className = 'prize-group-title';
             title.innerHTML = `🏆 ${prizeName} (${group.length})`;
             listDiv.appendChild(title);
             
-            // Liệt kê danh sách người trúng trong nhóm đó
             group.forEach((person, index) => {
                 const item = document.createElement('div');
                 item.className = 'winner-item';
@@ -307,7 +286,6 @@ function renderPlayerList() {
     pool.forEach((person, index) => {
         const item = document.createElement('div');
         item.className = 'winner-item';
-        // Đánh số thứ tự từ 1 đến hết danh sách
         item.innerHTML = `
             <span class="stt">${index + 1}.</span>
             <span><strong>${person.id}</strong> - ${person.name} (${person.dept})</span>
@@ -316,11 +294,9 @@ function renderPlayerList() {
     });
 }
 
-// Gán sự kiện cho các nút
-/* Mở danh sách người trúng */
 document.getElementById('openWinners').onclick = () => {
     const listDiv = document.getElementById('winnerList');
-    listDiv.innerHTML = ''; // Xóa cũ
+    listDiv.innerHTML = '';
     const order = ["First Prize", "Second Prize", "Third Prize", "Fourth Prize", "Fifth Prize", "Sixth Prize", "Seventh Prize", "Eighth Prize", "Ninth Prize", "Tenth Prize", "Bonus Prize"];
     
     let totalWinners = 0;
@@ -347,10 +323,9 @@ document.getElementById('openWinners').onclick = () => {
     document.querySelector('.winnerPopupPage').style.display = 'flex';
 };
 
-/* Mở danh sách người chơi */
 document.getElementById('openPlayersList').onclick = () => {
     const listDiv = document.getElementById('playerList');
-    listDiv.innerHTML = ''; // Xóa cũ
+    listDiv.innerHTML = '';
     
     if (pool.length === 0) {
         listDiv.innerHTML = "<p style='text-align:center; margin-top:50px;'>Empty List!</p>";
@@ -365,7 +340,6 @@ document.getElementById('openPlayersList').onclick = () => {
     document.querySelector('.playerPopupPage').style.display = 'flex';
 };
 
-// Sự kiện đóng
 document.getElementById('closeWinnerPopupBtn').onclick = () => {
     document.querySelector('.winnerPopupPage').style.display = 'none';
 };
@@ -402,7 +376,6 @@ excelInput.onchange = (e) => {
 
             if (uniquePool.length > 0) {
                 pool = uniquePool;
-                // Hiển thị thông báo nạp thành công ngay tại display
                 display.innerHTML = `<span style="color: #ffd54f; font-size: 1.5em;">${pool.length}</span> PLAYERS <br>HAVE BEEN SUCCESSFULLY ADDED`;
                 
                 validatePrizeQuota();
