@@ -12,9 +12,10 @@ const PRIZE_QUOTA = {
     "Fifth Prize": 5,
     "Sixth Prize": 6,
     "Seventh Prize": 5,
-    "Eighth Prize": 15,
-    "Ninth Prize": 20,
-    "Tenth Prize": 27,
+    "Eighth Prize": 20,
+    "Ninth Prize": 25,
+    "Tenth Prize": 2,
+    "Eleventh Prize": 15,
 };
 
 /* ===== 2. QUẢN LÝ DỮ LIỆU ===== */
@@ -32,6 +33,7 @@ let winnersGrouped = {
     "Eighth Prize": [],
     "Ninth Prize": [],
     "Tenth Prize": [],
+    "Eleventh Prize": [],
     "Bonus Prize": []
 };
 
@@ -84,17 +86,17 @@ createDots();
 const PRIZE_ORDER = [
     "Sixth Prize", "Fifth Prize", "Fourth Prize", "Third Prize", 
     "Second Prize", "First Prize", "Ninth Prize", "Eighth Prize", 
-    "Seventh Prize", "Tenth Prize", "Bonus Prize"
+    "Seventh Prize", "Tenth Prize", "Eleventh Prize", "Bonus Prize"
 ];
 
 function validatePrizeQuota() {
     const currentPrize = prizeSelect.value;
     statusMsg.textContent = "";
 
-    // 1. Tìm vị trí của giải hiện tại trong chuỗi ưu tiên
+    // Tìm vị trí của giải hiện tại trong chuỗi ưu tiên
     const currentIndex = PRIZE_ORDER.indexOf(currentPrize);
 
-    // 2. Kiểm tra xem các giải đứng trước đã hoàn thành chưa
+    // Kiểm tra xem các giải đứng trước đã hoàn thành chưa
     let missingPrizes = [];
     for (let i = 0; i < currentIndex; i++) {
         const prevPrizeName = PRIZE_ORDER[i];
@@ -109,7 +111,7 @@ function validatePrizeQuota() {
         }
     }
 
-    // 3. Nếu có giải trước chưa xong -> Khóa giải hiện tại
+    // Nếu có giải trước chưa xong -> Khóa giải hiện tại
     if (missingPrizes.length > 0) {
         startSpinBtn.disabled = true;
         statusMsg.style.color = "#ffd54f";
@@ -117,7 +119,7 @@ function validatePrizeQuota() {
         return false;
     }
 
-    // 4. Nếu đã xong các giải trước, kiểm tra định mức của chính giải hiện tại
+    // Nếu đã xong các giải trước, kiểm tra định mức của chính giải hiện tại
     if (currentPrize !== "Bonus Prize") {
         const currentCount = (winnersGrouped[currentPrize] || []).length;
         const maxCount = PRIZE_QUOTA[currentPrize];
@@ -130,7 +132,7 @@ function validatePrizeQuota() {
         }
     }
 
-    // 5. Nếu còn người trong pool thì cho phép quay
+    // Nếu còn người trong pool thì cho phép quay
     startSpinBtn.disabled = pool.length === 0;
     if (currentPrize === "Bonus Prize") {
         statusMsg.style.color = "#2e7d32";
@@ -243,7 +245,7 @@ function renderWinnerList() {
     const listDiv = document.getElementById('winnerList');
     listDiv.innerHTML = ''; 
 
-    const order = ["First Prize", "Second Prize", "Third Prize", "Fourth Prize", "Fifth Prize", "Sixth Prize", "Seventh Prize", "Eighth Prize", "Ninth Prize", "Tenth Prize", "Bonus Prize"];
+    const order = ["First Prize", "Second Prize", "Third Prize", "Fourth Prize", "Fifth Prize", "Sixth Prize", "Seventh Prize", "Eighth Prize", "Ninth Prize", "Tenth Prize", "Eleventh Prize", "Bonus Prize"];
     
     let hasAnyWinner = false;
 
@@ -297,7 +299,7 @@ function renderPlayerList() {
 document.getElementById('openWinners').onclick = () => {
     const listDiv = document.getElementById('winnerList');
     listDiv.innerHTML = '';
-    const order = ["First Prize", "Second Prize", "Third Prize", "Fourth Prize", "Fifth Prize", "Sixth Prize", "Seventh Prize", "Eighth Prize", "Ninth Prize", "Tenth Prize", "Bonus Prize"];
+    const order = ["First Prize", "Second Prize", "Third Prize", "Fourth Prize", "Fifth Prize", "Sixth Prize", "Seventh Prize", "Eighth Prize", "Ninth Prize", "Tenth Prize", "Eleventh Prize", "Bonus Prize"];
     
     let totalWinners = 0;
     order.forEach(prize => {
