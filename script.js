@@ -418,3 +418,13 @@ exportBtn.onclick = () => {
     XLSX.utils.book_append_sheet(wb, ws, "results");
     XLSX.writeFile(wb, "Lucky_Spin_Results.xlsx");
 };
+
+/* ===== 10. WARNING WHEN CLOSING TABS ===== */
+window.addEventListener("beforeunload", (e) => {
+    const hasData = pool.length > 0 || winners.length > 0;
+
+    if (!hasData) return;
+
+    e.preventDefault();
+    e.returnValue = "";
+});
