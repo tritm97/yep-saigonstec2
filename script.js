@@ -208,6 +208,25 @@ stopSpinBtn.onclick = () => {
     toggleSpinButtons(false);
 };
 
+let spaceLock = false;
+
+document.addEventListener("keydown", (e) => {
+    if (e.code !== "Space" || spaceLock) return;
+
+    if (["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) return;
+
+    e.preventDefault();
+    spaceLock = true;
+
+    if (!stopSpinBtn.classList.contains("hidden")) {
+        stopSpinBtn.click();
+    } else {
+        startSpinBtn.click();
+    }
+
+    setTimeout(() => spaceLock = false, 100);
+});
+
 function finalizeWinner() {
     const p = currentPerson;
     const selectedPrize = prizeSelect.value;
