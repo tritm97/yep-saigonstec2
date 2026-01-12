@@ -86,7 +86,7 @@ createDots();
 const PRIZE_ORDER = [
     "Sixth Prize", "Fifth Prize", "Fourth Prize", "Third Prize", 
     "Second Prize", "First Prize", "Ninth Prize", "Eighth Prize", 
-    "Seventh Prize", "Tenth Prize", "Eleventh Prize", "Bonus Prize"
+    "Seventh Prize", "Tenth Prize", "Bonus Prize", "Eleventh Prize"
 ];
 
 function validatePrizeQuota() {
