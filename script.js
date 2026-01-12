@@ -227,12 +227,12 @@ function finalizeWinner() {
 
     fireConfetti();
 
-    const honor = p.gender.toLowerCase().includes("nữ") ? "Ms." : "Mr.";
+    // const honor = p.gender.toLowerCase().includes("nữ") ? "Ms." : "Mr.";
 
     display.innerHTML = `
         <span style="font-size: 0.6em; color: #ffd54f; text-transform: uppercase;">${selectedPrize}</span><br/>
         <span style="color: #fff; font-size: 1.2em;">🎉 ${p.id}</span><br/>
-        <span style="font-size: 0.9em; font-weight: bold;">${honor} ${p.name}</span><br/>
+        <span style="font-size: 0.9em; font-weight: bold;">${p.name}</span><br/>
         <small style="font-size: 0.5em; opacity: 0.9;">${p.dept}</small>
     `;
     display.classList.add("winner");
@@ -372,7 +372,7 @@ excelInput.onchange = (e) => {
                 const id = r[0]?.toString().trim();
                 if (id && !seenIds.has(id)) {
                     seenIds.add(id);
-                    uniquePool.push({ id, name: r[1], gender: r[2], dept: r[3] });
+                    uniquePool.push({ id, name: r[1], dept: r[2] });
                 }
             });
 
