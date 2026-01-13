@@ -23,18 +23,9 @@ let dots = [], dotIndex = 0;
 let pool = [];
 let winners = [];
 let winnersGrouped = {
-    "First Prize": [],
-    "Second Prize": [],
-    "Third Prize": [],
-    "Fourth Prize": [],
-    "Fifth Prize": [],
-    "Sixth Prize": [],
-    "Seventh Prize": [],
-    "Eighth Prize": [],
-    "Ninth Prize": [],
-    "Tenth Prize": [],
-    "Eleventh Prize": [],
-    "Bonus Prize": []
+    "First Prize": [], "Second Prize": [], "Third Prize": [], "Fourth Prize": [],
+    "Fifth Prize": [], "Sixth Prize": [], "Seventh Prize": [], "Eighth Prize": [],
+    "Ninth Prize": [], "Tenth Prize": [], "Eleventh Prize": [], "Bonus Prize": []
 };
 
 let spinTimer = null;
@@ -93,25 +84,15 @@ function validatePrizeQuota() {
     const currentPrize = prizeSelect.value;
     statusMsg.textContent = "";
 
-    // Tìm vị trí của giải hiện tại trong chuỗi ưu tiên
     const currentIndex = PRIZE_ORDER.indexOf(currentPrize);
-
-    // Kiểm tra xem các giải đứng trước đã hoàn thành chưa
     let missingPrizes = [];
     for (let i = 0; i < currentIndex; i++) {
         const prevPrizeName = PRIZE_ORDER[i];
-        
-        // Bonus Prize không có quota nên mặc định nó không chặn giải sau, 
-        // nhưng ở đây Bonus nằm cuối nên chỉ check các giải có quota trong PRIZE_QUOTA
         const quota = PRIZE_QUOTA[prevPrizeName];
         const currentCount = (winnersGrouped[prevPrizeName] || []).length;
-
-        if (quota && currentCount < quota) {
-            missingPrizes.push(prevPrizeName);
-        }
+        if (quota && currentCount < quota) missingPrizes.push(prevPrizeName);
     }
 
-    // Nếu có giải trước chưa xong -> Khóa giải hiện tại
     if (missingPrizes.length > 0) {
         startSpinBtn.disabled = true;
         statusMsg.style.color = "#ffd54f";
@@ -119,11 +100,9 @@ function validatePrizeQuota() {
         return false;
     }
 
-    // Nếu đã xong các giải trước, kiểm tra định mức của chính giải hiện tại
     if (currentPrize !== "Bonus Prize") {
         const currentCount = (winnersGrouped[currentPrize] || []).length;
         const maxCount = PRIZE_QUOTA[currentPrize];
-
         if (currentCount >= maxCount) {
             startSpinBtn.disabled = true;
             statusMsg.style.color = "#ffd54f";
@@ -132,7 +111,6 @@ function validatePrizeQuota() {
         }
     }
 
-    // Nếu còn người trong pool thì cho phép quay
     startSpinBtn.disabled = pool.length === 0;
     if (currentPrize === "Bonus Prize") {
         statusMsg.style.color = "#2e7d32";
@@ -197,6 +175,7 @@ stopSpinBtn.onclick = () => {
     clearInterval(spinTimer);
 
     const displayedId = display.textContent;
+    // currentPerson = pool[Math.floor(Math.random() * pool.length)];
     currentPerson = pool.find(p => p.id === displayedId);
 
     if (!currentPerson) {
@@ -212,9 +191,7 @@ let spaceLock = false;
 
 document.addEventListener("keydown", (e) => {
     if (e.code !== "Space" || spaceLock) return;
-
     if (["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) return;
-
     e.preventDefault();
     spaceLock = true;
 
@@ -227,6 +204,23 @@ document.addEventListener("keydown", (e) => {
     setTimeout(() => spaceLock = false, 100);
 });
 
+/* ===== 8. LOCAL STORAGE ===== */
+function saveSessionToLocal() {
+    const sessionData = { pool, winnersGrouped };
+    localStorage.setItem("luckySpinSession", JSON.stringify(sessionData));
+}
+
+function loadSessionFromLocal() {
+    const data = localStorage.getItem("luckySpinSession");
+    if (!data) return null;
+    try { return JSON.parse(data); } catch (err) { return null; }
+}
+
+function clearSessionFromLocal() {
+    localStorage.removeItem("luckySpinSession");
+}
+
+/* ===== 9. FINALIZE WINNER ===== */
 function finalizeWinner() {
     const p = currentPerson;
     const selectedPrize = prizeSelect.value;
@@ -234,9 +228,7 @@ function finalizeWinner() {
     clearInterval(nameTimer);
     clearInterval(spinTimer);
 
-    if (!winnersGrouped[selectedPrize]) {
-        winnersGrouped[selectedPrize] = [];
-    }
+    if (!winnersGrouped[selectedPrize]) winnersGrouped[selectedPrize] = [];
 
     p.prize = selectedPrize;
     winners.push(p);
@@ -245,8 +237,6 @@ function finalizeWinner() {
     pool = pool.filter((x) => x.id !== p.id);
 
     fireConfetti();
-
-    // const honor = p.gender.toLowerCase().includes("nữ") ? "Ms." : "Mr.";
 
     display.innerHTML = `
         <span style="font-size: 0.6em; color: #ffd54f; text-transform: uppercase;">${selectedPrize}</span><br/>
@@ -257,119 +247,65 @@ function finalizeWinner() {
     display.classList.add("winner");
 
     validatePrizeQuota();
+
+    // Lưu phiên làm việc
+    saveSessionToLocal();
 }
 
-/* ===== 8. POPUPS ===== */
+/* ===== 10. POPUPS ===== */
 function renderWinnerList() {
-    const listDiv = document.getElementById('winnerList');
+    const listDiv = winnerListDiv;
     listDiv.innerHTML = ''; 
-
     const order = ["First Prize", "Second Prize", "Third Prize", "Fourth Prize", "Fifth Prize", "Sixth Prize", "Seventh Prize", "Eighth Prize", "Ninth Prize", "Tenth Prize", "Eleventh Prize", "Bonus Prize"];
-    
     let hasAnyWinner = false;
-
     order.forEach(prizeName => {
         const group = winnersGrouped[prizeName];
         if (group && group.length > 0) {
             hasAnyWinner = true;
-            
             const title = document.createElement('div');
             title.className = 'prize-group-title';
             title.innerHTML = `🏆 ${prizeName} (${group.length})`;
             listDiv.appendChild(title);
-            
             group.forEach((person, index) => {
                 const item = document.createElement('div');
                 item.className = 'winner-item';
-                item.innerHTML = `
-                    <span class="stt">${index + 1}.</span>
-                    <span><strong>${person.id}</strong> - ${person.name} (${person.dept})</span>
-                `;
+                item.innerHTML = `<span class="stt">${index + 1}.</span> <span><strong>${person.id}</strong> - ${person.name} (${person.dept})</span>`;
                 listDiv.appendChild(item);
             });
         }
     });
-
-    if (!hasAnyWinner) {
-        listDiv.innerHTML = "<p style='text-align:center; padding-top:20px; color:#000;'>No one has won the prize yet 🧧</p>";
-    }
+    if (!hasAnyWinner) listDiv.innerHTML = "<p style='text-align:center; padding-top:20px; color:#000;'>No one has won the prize yet 🧧</p>";
 }
 
 function renderPlayerList() {
-    const listDiv = document.getElementById('playerList');
+    const listDiv = playerListDiv;
     listDiv.innerHTML = '';
-    
     if (pool.length === 0) {
         listDiv.innerHTML = "<p style='text-align:center; font-size:20px;'>Empty List!</p>";
         return;
     }
-    
     pool.forEach((person, index) => {
         const item = document.createElement('div');
         item.className = 'winner-item';
-        item.innerHTML = `
-            <span class="stt">${index + 1}.</span>
-            <span><strong>${person.id}</strong> - ${person.name} (${person.dept})</span>
-        `;
+        item.innerHTML = `<span class="stt">${index + 1}.</span> <span><strong>${person.id}</strong> - ${person.name} (${person.dept})</span>`;
         listDiv.appendChild(item);
     });
 }
 
-document.getElementById('openWinners').onclick = () => {
-    const listDiv = document.getElementById('winnerList');
-    listDiv.innerHTML = '';
-    const order = ["First Prize", "Second Prize", "Third Prize", "Fourth Prize", "Fifth Prize", "Sixth Prize", "Seventh Prize", "Eighth Prize", "Ninth Prize", "Tenth Prize", "Eleventh Prize", "Bonus Prize"];
-    
-    let totalWinners = 0;
-    order.forEach(prize => {
-        const group = winnersGrouped[prize];
-        if (group && group.length > 0) {
-            const title = document.createElement('div');
-            title.className = 'prize-group-title';
-            title.innerHTML = `🏆 ${prize}`;
-            listDiv.appendChild(title);
-            
-            group.forEach((p, index) => {
-                totalWinners++;
-                const item = document.createElement('div');
-                item.className = 'winner-item';
-                item.innerHTML = `<span class="stt">${index + 1}.</span> <span>${p.id} - ${p.name} (${p.dept})</span>`;
-                listDiv.appendChild(item);
-            });
-        }
-    });
-    
-    if(totalWinners === 0) listDiv.innerHTML = "<p style='text-align:center; margin-top:50px; color:#000 '>No one has won the prize yet 🧧</p>";
+openWinnersBtn.onclick = () => {
     renderWinnerList();
     document.querySelector('.winnerPopupPage').style.display = 'flex';
 };
 
-document.getElementById('openPlayersList').onclick = () => {
-    const listDiv = document.getElementById('playerList');
-    listDiv.innerHTML = '';
-    
-    if (pool.length === 0) {
-        listDiv.innerHTML = "<p style='text-align:center; margin-top:50px;'>Empty List!</p>";
-    } else {
-        pool.forEach((p, index) => {
-            const item = document.createElement('div');
-            item.className = 'winner-item';
-            item.innerHTML = `<span class="stt">${index + 1}.</span> <span>${p.id} - ${p.name} (${p.dept})</span>`;
-            listDiv.appendChild(item);
-        });
-    }
+openPlayersBtn.onclick = () => {
+    renderPlayerList();
     document.querySelector('.playerPopupPage').style.display = 'flex';
 };
 
-document.getElementById('closeWinnerPopupBtn').onclick = () => {
-    document.querySelector('.winnerPopupPage').style.display = 'none';
-};
+closeWinnerBtn.onclick = () => { document.querySelector('.winnerPopupPage').style.display = 'none'; };
+closePlayerBtn.onclick = () => { document.querySelector('.playerPopupPage').style.display = 'none'; };
 
-document.getElementById('closePlayerPopupBtn').onclick = () => {
-    document.querySelector('.playerPopupPage').style.display = 'none';
-};
-
-/* ===== 9. IMPORT EXCEL ===== */
+/* ===== 11. IMPORT EXCEL ===== */
 excelInput.onchange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -379,36 +315,29 @@ excelInput.onchange = (e) => {
         try {
             const wb = XLSX.read(evt.target.result, { type: "binary" });
             const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 });
-
-            if (rows.length < 2) {
-                alert("❌ Blank Excel file!");
-                return;
-            }
-
+            if (rows.length < 2) return alert("❌ Blank Excel file!");
             const seenIds = new Set();
             const uniquePool = [];
-            rows.slice(1).forEach((r) => {
+            rows.slice(1).forEach(r => {
                 const id = r[0]?.toString().trim();
                 if (id && !seenIds.has(id)) {
                     seenIds.add(id);
                     uniquePool.push({ id, name: r[1], dept: r[2] });
                 }
             });
-
             if (uniquePool.length > 0) {
                 pool = uniquePool;
                 display.innerHTML = `<span style="color: #ffd54f; font-size: 1.5em;">${pool.length}</span> PLAYERS <br>HAVE BEEN SUCCESSFULLY ADDED`;
-                
                 validatePrizeQuota();
                 uploadContainer.classList.add("hidden");
+                saveSessionToLocal(); // Lưu phiên làm việc
             }
-        } catch (err) {
-            alert("Error: " + err.message);
-        }
+        } catch (err) { alert("Error: " + err.message); }
     };
     reader.readAsBinaryString(file);
 };
 
+/* ===== 12. EXPORT EXCEL ===== */
 exportBtn.onclick = () => {
     if (winners.length === 0) return alert("No one has won the prize yet!");
     const ws = XLSX.utils.json_to_sheet(winners.map(w => ({
@@ -419,12 +348,64 @@ exportBtn.onclick = () => {
     XLSX.writeFile(wb, "Lucky_Spin_Results.xlsx");
 };
 
-/* ===== 10. WARNING WHEN CLOSING TABS ===== */
+/* ===== 13. WARNING WHEN CLOSING TABS ===== */
 window.addEventListener("beforeunload", (e) => {
     const hasData = pool.length > 0 || winners.length > 0;
-
     if (!hasData) return;
-
     e.preventDefault();
     e.returnValue = "";
+});
+
+/* ===== 14. PHỤC HỒI PHIÊN LÀM VIỆC CŨ ===== */
+window.addEventListener("DOMContentLoaded", () => {
+    const oldSession = loadSessionFromLocal();
+    if (!oldSession) return;
+
+    const restore = confirm(
+        "Detected previous session data.\n\nPress OK to export Excel and continue your previous session.\nPress Cancel to start a new session."
+    );
+
+    if (restore) {
+        // Xuất file Excel
+        const allWinners = [];
+        Object.values(oldSession.winnersGrouped).forEach(group => {
+            if (group && group.length > 0) allWinners.push(...group);
+        });
+        if (allWinners.length > 0) {
+            const ws = XLSX.utils.json_to_sheet(allWinners.map(w => ({
+                "Prize": w.prize, "Employee ID": w.id, "Full Name": w.name, "Department": w.dept
+            })));
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "results");
+            XLSX.writeFile(wb, "Lucky_Spin_Results.xlsx");
+        }
+
+        // Nạp lại phiên cũ
+        pool = oldSession.pool || [];
+        winnersGrouped = oldSession.winnersGrouped || {};
+        winners = [];
+        Object.values(winnersGrouped).forEach(group => { if (group) winners.push(...group); });
+
+        display.innerHTML = `<span style="color: #ffd54f;">${pool.length}</span> PLAYERS REMAINING`;
+        validatePrizeQuota();
+        alert("Previous session restored. You can continue spinning!");
+        uploadContainer.classList.add("hidden");
+    } else {
+        const confirmClear = confirm(
+            "Are you sure you want to discard previous session and start a new one?\nPress OK to clear old session, Cancel to stay on this prompt."
+        );
+        if (confirmClear) {
+            clearSessionFromLocal();
+            pool = [];
+            winnersGrouped = {
+                "First Prize": [], "Second Prize": [], "Third Prize": [], "Fourth Prize": [],
+                "Fifth Prize": [], "Sixth Prize": [], "Seventh Prize": [], "Eighth Prize": [],
+                "Ninth Prize": [], "Tenth Prize": [], "Eleventh Prize": [], "Bonus Prize": []
+            };
+            winners = [];
+            display.innerHTML = `Welcome! Please import players list to start.`;
+        } else {
+            window.location.reload();
+        }
+    }
 });
